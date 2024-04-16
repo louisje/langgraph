@@ -303,6 +303,7 @@ class Pregel(
         )
 
     def get_state(self, config: RunnableConfig) -> StateSnapshot:
+        """Get the current state of the graph."""
         if not self.checkpointer:
             raise ValueError("No checkpointer set")
 
@@ -323,6 +324,7 @@ class Pregel(
             )
 
     async def aget_state(self, config: RunnableConfig) -> StateSnapshot:
+        """Get the current state of the graph."""
         if not self.checkpointer:
             raise ValueError("No checkpointer set")
 
@@ -343,6 +345,7 @@ class Pregel(
             )
 
     def get_state_history(self, config: RunnableConfig) -> Iterator[StateSnapshot]:
+        """Get the history of the state of the graph."""
         if not self.checkpointer:
             raise ValueError("No checkpointer set")
 
@@ -364,6 +367,7 @@ class Pregel(
     async def aget_state_history(
         self, config: RunnableConfig
     ) -> AsyncIterator[StateSnapshot]:
+        """Get the history of the state of the graph."""
         if not self.checkpointer:
             raise ValueError("No checkpointer set")
 
@@ -559,6 +563,7 @@ class Pregel(
         interrupt_after_nodes: Optional[Sequence[str]] = None,
         debug: Optional[bool] = None,
     ) -> Iterator[Union[dict[str, Any], Any]]:
+        """Stream graph steps for a single input."""
         config = ensure_config(config)
         callback_manager = get_callback_manager_for_config(config)
         run_manager = callback_manager.on_chain_start(
@@ -698,13 +703,11 @@ class Pregel(
 
                     # yield current value or updates
                     if stream_mode == "values":
-                        if step_output := map_output_values(
+                        yield from map_output_values(
                             output_keys, pending_writes, channels
-                        ):
-                            yield step_output
+                        )
                     else:
-                        if step_output := map_output_updates(output_keys, next_tasks):
-                            yield step_output
+                        yield from map_output_updates(output_keys, next_tasks)
 
                     # save end of step checkpoint
                     if self.checkpointer is not None and (
@@ -912,13 +915,13 @@ class Pregel(
 
                     # yield current value or updates
                     if stream_mode == "values":
-                        if step_output := map_output_values(
+                        for chunk in map_output_values(
                             output_keys, pending_writes, channels
                         ):
-                            yield step_output
+                            yield chunk
                     else:
-                        if step_output := map_output_updates(output_keys, next_tasks):
-                            yield step_output
+                        for chunk in map_output_updates(output_keys, next_tasks):
+                            yield chunk
 
                     # save end of step checkpoint
                     if self.checkpointer is not None and (
@@ -972,10 +975,26 @@ class Pregel(
         debug: Optional[bool] = None,
         **kwargs: Any,
     ) -> Union[dict[str, Any], Any]:
+        """Run the graph with a single input and config.
+
+        Args:
+            input: The input data for the graph. It can be a dictionary or any other type.
+            config: Optional. The configuration for the graph run.
+            stream_mode: Optional[str]. The stream mode for the graph run. Default is "values".
+            output_keys: Optional. The output keys to retrieve from the graph run.
+            input_keys: Optional. The input keys to provide for the graph run.
+            interrupt_before_nodes: Optional. The nodes to interrupt the graph run before.
+            interrupt_after_nodes: Optional. The nodes to interrupt the graph run after.
+            debug: Optional. Enable debug mode for the graph run.
+            **kwargs: Additional keyword arguments to pass to the graph run.
+
+        Returns:
+            The output of the graph run. If stream_mode is "values", it returns the latest output.
+            If stream_mode is not "values", it returns a list of output chunks.
+        """
         output_keys = output_keys if output_keys is not None else self.output_channels
-        output_is_dict = not isinstance(output_keys, str)
         if stream_mode == "values":
-            latest: Union[dict[str, Any], Any] = {} if output_is_dict else None
+            latest: Union[dict[str, Any], Any] = None
         else:
             chunks = []
         for chunk in self.stream(
@@ -990,7 +1009,7 @@ class Pregel(
             **kwargs,
         ):
             if stream_mode == "values":
-                latest = {**latest, **chunk} if output_is_dict else chunk
+                latest = chunk
             else:
                 chunks.append(chunk)
         if stream_mode == "values":
@@ -1011,10 +1030,27 @@ class Pregel(
         debug: Optional[bool] = None,
         **kwargs: Any,
     ) -> Union[dict[str, Any], Any]:
+        """Asynchronously invoke the graph on a single input.
+
+        Args:
+            input: The input data for the computation. It can be a dictionary or any other type.
+            config: Optional. The configuration for the computation.
+            stream_mode: Optional. The stream mode for the computation. Default is "values".
+            output_keys: Optional. The output keys to include in the result. Default is None.
+            input_keys: Optional. The input keys to include in the result. Default is None.
+            interrupt_before_nodes: Optional. The nodes to interrupt before. Default is None.
+            interrupt_after_nodes: Optional. The nodes to interrupt after. Default is None.
+            debug: Optional. Whether to enable debug mode. Default is None.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            The result of the computation. If stream_mode is "values", it returns the latest value.
+            If stream_mode is "chunks", it returns a list of chunks.
+        """
+
         output_keys = output_keys if output_keys is not None else self.output_channels
-        output_is_dict = not isinstance(output_keys, str)
         if stream_mode == "values":
-            latest: Union[dict[str, Any], Any] = {} if output_is_dict else None
+            latest: Union[dict[str, Any], Any] = None
         else:
             chunks = []
         async for chunk in self.astream(
@@ -1029,7 +1065,7 @@ class Pregel(
             **kwargs,
         ):
             if stream_mode == "values":
-                latest = {**latest, **chunk} if output_is_dict else chunk
+                latest = chunk
             else:
                 chunks.append(chunk)
         if stream_mode == "values":
