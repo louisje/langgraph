@@ -121,8 +121,10 @@ class BaseCheckpointSaver(ABC):
         serde: Optional[SerializerProtocol] = None,
         at: Optional[CheckpointAt] = None,
     ) -> None:
-        self.serde = serde or self.serde
-        self.at = at or self.at
+        if serde:
+            self.serde = serde
+        if at:
+            self.at = at
 
     @property
     def config_specs(self) -> list[ConfigurableFieldSpec]:
