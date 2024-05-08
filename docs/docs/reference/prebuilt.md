@@ -37,12 +37,12 @@ from langgraph.prebuilt import ToolInvocation
 from langgraph.prebuilt.chat_agent_executor import create_tool_calling_executor
 ```
 
-::: langgraph.prebuilt.chat_agent_executor
+::: langgraph.prebuilt.chat_agent_executor.create_tool_calling_executor
 
-## `create_agent_executor`
+## `tools_condition`
 
 ```python
-from langgraph.prebuilt import create_agent_executor
+from langgraph.prebuilt import tools_condition
 ```
 
-::: langgraph.prebuilt.create_agent_executor
+::: langgraph.prebuilt.tools_condition
