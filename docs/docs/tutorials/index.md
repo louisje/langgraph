@@ -28,7 +28,6 @@ Learn from example implementations of graphs designed for specific scenarios and
 #### RAG
 
 - [Adaptive RAG](rag/langgraph_adaptive_rag.ipynb)
-    - [Adaptive RAG using Cohere](rag/langgraph_adaptive_rag_cohere.ipynb) 
     - [Adaptive RAG using local models](rag/langgraph_adaptive_rag_local.ipynb)
 - [Agentic RAG.ipynb](rag/langgraph_agentic_rag.ipynb)
 - [Corrective RAG](rag/langgraph_crag.ipynb)
@@ -56,7 +55,7 @@ Learn from example implementations of graphs designed for specific scenarios and
 - [Agent-based](chatbot-simulation-evaluation/agent-simulation-evaluation.ipynb): Evaluating chatbots via simulated user interactions
 - [Within LangSmith](chatbot-simulation-evaluation/langsmith-agent-simulation-evaluation.ipynb): Evaluating chatbots in LangSmith over a dialog dataset
 
-#### Competitve Programming
+#### Competitive Programming
 
 - [Can Language Models Solve Olympiad Programming?](usaco/usaco.ipynb): Build an agent with few-shot "episodic memory" and human-in-the-loop collaboration to solve problems from the USA Computing Olympiad; adapted from the [paper of the same name](https://arxiv.org/abs/2404.10952v1) by Shi, Tang, Narasimhan, and Yao.
 

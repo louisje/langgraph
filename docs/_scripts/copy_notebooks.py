@@ -19,7 +19,6 @@ _MANUAL = {
         "visualization.ipynb",
         "state-model.ipynb",
         "subgraph.ipynb",
-        "persistence_postgres.ipynb",
         "force-calling-a-tool-first.ipynb",
         "dynamic-returning-direct.ipynb",
         "managing-agent-steps.ipynb",
@@ -27,6 +26,7 @@ _MANUAL = {
         "branching.ipynb",
         "dynamically-returning-directly.ipynb",
         "configuration.ipynb",
+        "extraction/retries.ipynb",
     ],
     "tutorials": [
         "introduction.ipynb",
@@ -60,6 +60,7 @@ _HIDE = set(
         "chatbots/customer-support.ipynb",
         "rag/langgraph_rag_agent_llama3_local.ipynb",
         "rag/langgraph_self_rag_pinecone_movies.ipynb",
+        "rag/langgraph_adaptive_rag_cohere.ipynb",
     ]
 )
 
@@ -121,6 +122,7 @@ def copy_notebooks():
                     with open(dst_path, "r") as f:
                         content = f.read()
                     content = content.replace("(./img/", "(../img/")
+                    content = content.replace('src=\\"./img/', 'src=\\"../img/')
                     with open(dst_path, "w") as f:
                         f.write(content)
                 dst_dir = dst_dir_

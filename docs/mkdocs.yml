@@ -100,7 +100,6 @@ nav:
               - Hierarchical Teams: tutorials/multi_agent/hierarchical_agent_teams.ipynb
           - RAG:
               - tutorials/rag/langgraph_adaptive_rag.ipynb
-              - tutorials/rag/langgraph_adaptive_rag_cohere.ipynb
               - tutorials/rag/langgraph_adaptive_rag_local.ipynb
               - tutorials/rag/langgraph_agentic_rag.ipynb
               - tutorials/rag/langgraph_crag.ipynb
@@ -143,12 +142,15 @@ nav:
          - "Managing Agent Steps": how-tos/managing-agent-steps.ipynb
      - Alternative State Definitions:  
          - "Pydantic State": how-tos/state-model.ipynb
-
+     - Structured Output:
+         - "Extraction with Re-prompting": how-tos/extraction/retries.ipynb
+  - 'Conceptual Guides':
+     - 'concepts/index.md'
   - Reference:
       - Graphs: reference/graphs.md
       - Checkpointing: reference/checkpoints.md
       - Prebuilt Components: reference/prebuilt.md
-      - Errors: reference/errors.md
+      - Errors: reference/errors.md    
   
 
 markdown_extensions:
@@ -173,6 +175,7 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
+      use_pygments: true
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.keys
@@ -198,3 +201,12 @@ markdown_extensions:
       custom_checkbox: true
 extra_css:
   - css/mkdocstrings.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/js 
+      link: https://langchain-ai.github.io/langgraphjs/
+    - icon: fontawesome/brands/github
+      link: https://github.com/langchain-ai/langgraph
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/LangChainAI
